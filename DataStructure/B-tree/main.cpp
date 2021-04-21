@@ -12,7 +12,7 @@ int main()
     t.insert(30);
     t.insert(7);
     t.insert(17);
-
     std::cout << "The B-tree is: ";
+
     t.traverse();
 }

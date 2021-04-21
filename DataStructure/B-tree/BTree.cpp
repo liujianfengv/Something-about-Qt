@@ -10,13 +10,18 @@ TreeNode::TreeNode(int t1, bool leaf1) {
 }
 
 void TreeNode::traverse() {
+    // There are n keys and n+1 children, travers througn n keys
+    // and first n children
     int i;
     for (i = 0; i < n; ++i) {
+        // If this is not leaf, then before printing key[i],
+        // traverse the subtree rooted with child C[i]
         if (leaf == false) {
             C[i]->traverse();
         }
         std::cout << " " << keys[i];
     }
+    // Print the subtree rooted with last child
     if (leaf == false) {
         C[i]->traverse();
     }

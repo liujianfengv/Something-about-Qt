@@ -3,17 +3,21 @@
 #include <iostream>
 class TreeNode {
 private:
-    int *keys;
-    int t;
-    TreeNode **C;
-    int n;
-    bool leaf;
+    int *keys;  // An array of keys
+    int t; // Minimum degree
+    TreeNode **C;    // An array of child pointers
+    int n; // Current number of keys
+    bool leaf; // Is true when node is lead. Otherwise false
 public:
     TreeNode(int temp, bool bool_leaf);
     void insertNonFull(int k);
     void splitChild(int i, TreeNode *y);
+
+    // A function to traverse all nodes in a subtree rooted with this node
     void traverse();
-    TreeNode * search(int k);
+
+    // A function to traverse all nodes in a subtree rooted with this node
+    TreeNode * search(int k); //returns NULL if k is not present
     friend class BTree;
 };
 
@@ -39,6 +43,5 @@ public:
 
     void insert(int k);
 };
-
 
 #endif
