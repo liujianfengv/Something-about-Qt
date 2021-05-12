@@ -18,6 +18,9 @@ public:
 
     // A function to traverse all nodes in a subtree rooted with this node
     TreeNode * search(int k); //returns NULL if k is not present
+
+    // Make the BTree friend of this so that we can access private members of this
+    // class in BTree functions
     friend class BTree;
 };
 
