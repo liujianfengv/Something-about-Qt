@@ -27,7 +27,6 @@ void TreeNode::traverse() {
     }
 }
 
-//Function to search key k in subtree rooted with this node
 TreeNode *TreeNode::search(int k) {
     // Find the first key greater than or equal to k
     int i = 0;
@@ -47,7 +46,15 @@ TreeNode *TreeNode::search(int k) {
     return C[i]->search(k);
 }
 
-//The main function that inserts a new key in this B-Tree
+int TreeNode::findKey(int k)
+{
+    int idx = 0;
+    while (idx < n && keys[idx] < k) {
+        ++idx;
+    }
+    return idx;
+}
+
 void BTree::insert(int k) {
 
     // If tree is empty
@@ -83,9 +90,6 @@ void BTree::insert(int k) {
     }
 }
 
-// A utility funtion to insert a new key in this node
-// The assumption is, the node must be non-full when
-// this funciton is called
 void TreeNode::insertNonFull(int k) {
     // Initialize index as index of rightmost element
     int i = n - 1;
@@ -125,8 +129,6 @@ void TreeNode::insertNonFull(int k) {
     }
 }
 
-// A utility function to split the child y of this node
-// Note that y must be full when this function is called
 void TreeNode::splitChild(int i, TreeNode *y) {
     // Create a new node which is going to store (t-1) keys of y
     TreeNode *z = new TreeNode(y->t, y->leaf);
@@ -166,4 +168,58 @@ void TreeNode::splitChild(int i, TreeNode *y) {
 
     // Increment count of keys in this node
     n = n + 1;
+}
+
+void TreeNode::remove(int k)
+{
+    int idx = findKey(k);
+
+    // The key to be removed is present in this node
+    if (idx < n && keys[idx] == k) {
+        // If the node is a leaf node - removeFromLeaf is called
+        // Otherwise, removeFromNonLeaf function is called
+        if (leaf) {
+            removeFromLeaf(idx);
+        } else {
+            removeFromNonLeaf(idx);
+        }
+    } else {
+        // If this node is a leaf node, then the key is not present in tree
+        if (leaf) {
+            std::cout << "The key" << k <<" is does not exist in the tree" << std::endl;
+            return;
+        }
+
+        // The key to be removed is present in the sub-tree rooted with this node
+        // The flag indicates whether the key is persent in the sub-tree rooted with the last
+        // child of this node
+        bool flag = ( (idx == n) ? true : false);
+
+        // If the child where the key is supposed to exist has less that t keys,
+        // we fill that child
+        if (C[idx]->n < t) {
+            fill(idx);
+        }
+
+        // If the last child has been merged, it must have merged with the previoud
+        // child and so we recurse on the (idx - 1)th child. Else, we recurse on the
+        // (idx)th child which now has atleast t keys
+        if (flag && idx > n) {
+            C[idx - 1]->remove(k);
+        } else {
+            C[idx]->remove(k);
+        }
+    }
+    return;
+}
+
+void TreeNode::removeFromLeaf(int idx)
+{
+    // Move all the keys after idx-th pos one place backward
+    for (int i = idx + 1; i < n; ++i) {
+        keys[i - 1] = keys[i];
+    }
+    // Reduce the count of keys
+    n--;
+    return;
 }
