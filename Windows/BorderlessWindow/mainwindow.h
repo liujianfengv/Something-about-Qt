@@ -17,5 +17,7 @@ public:
 
 private:
     Ui::MainWindow *ui;
+protected:
+    bool nativeEvent(const QByteArray &eventType, void *message, long *result);
 };
 #endif // MAINWINDOW_H
