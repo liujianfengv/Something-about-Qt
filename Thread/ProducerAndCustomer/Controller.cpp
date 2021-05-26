@@ -13,6 +13,7 @@ void Producer::doWork()
             return;
         }
         shared.buff[shared.nput] = shared.nval;
+        qDebug()<<"thread id: "<<QThread::currentThreadId()<<" produce items["<<shared.nput<<"]";
         shared.nput++;
         shared.nval++;
         _itemCount++;
@@ -24,14 +25,29 @@ void Consumer::doWork()
 {
     bool error = false;
     for (int i = 0; i < ITEMS; i++) {
+        waitForItem(i);
         if (shared.buff[i] != i) {
             error = true;
+        } else {
+            qDebug()<<QString("consume item[%1]").arg(i);
         }
     }
     if (error) {
         qDebug()<<"Error occur in consume";
     }  else {
         qDebug()<<"Success!";
+    }
+}
+
+void Consumer::waitForItem(int index)
+{
+    for (;;) {
+        shared.mutex.lock();
+        if (index < shared.nput) {
+            shared.mutex.unlock();
+            return;
+        }
+        shared.mutex.unlock();
     }
 }
 
@@ -58,15 +74,12 @@ void Controller::begin()
         connect(this, &Controller::produce, worker, &Producer::doWork);
         th->start();
     }
-    emit produce();
-    for (auto & th : _producerThreads) {
-        th->quit();
-        th->wait();
-    }
     Consumer *consumer = new Consumer;
     consumer->moveToThread(&_consumerThread);
     connect(&_consumerThread, &QThread::finished, consumer, &QObject::deleteLater);
     connect(this, &Controller::consume, consumer, &Consumer::doWork);
     _consumerThread.start();
+
+    emit produce();
     emit consume();
 }

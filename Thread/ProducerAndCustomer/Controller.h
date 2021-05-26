@@ -28,6 +28,8 @@ class Consumer : public QObject
     Q_OBJECT
 public slots:
     void doWork();
+private:
+    void waitForItem(int index);
 };
 
 class Controller : public QObject {
