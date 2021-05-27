@@ -6,14 +6,21 @@
 #include <QDebug>
 #include <QMutex>
 #include <QVector>
+#include <QWaitCondition>
 const int THREADS = 10;
 const int ITEMS = 100000;
-struct Shared{
+struct {
     QMutex mutex;
-    int buff[ITEMS];
     int nput;
     int nval;
-};
+} put;
+
+struct {
+    QMutex mutex;
+    QWaitCondition cond;
+    int nready;
+} nready;
+
 class Producer : public QObject
 {
     Q_OBJECT

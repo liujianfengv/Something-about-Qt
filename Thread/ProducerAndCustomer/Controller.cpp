@@ -2,22 +2,31 @@
 #include <QThread>
 #include <QDebug>
 int items = 0;
-Shared shared;
+int buff[ITEMS];
 void Producer::doWork()
 {
     while (1) {
-        shared.mutex.lock();
-        if (shared.nput >= ITEMS) {
-            shared.mutex.unlock();
+        put.mutex.lock();
+        if (put.nput >= ITEMS) {
+            put.mutex.unlock();
             qDebug()<<"thread id: "<<QThread::currentThreadId()<<" produce["<<_itemCount<<"]items";
             return;
         }
-        shared.buff[shared.nput] = shared.nval;
-        qDebug()<<"thread id: "<<QThread::currentThreadId()<<" produce items["<<shared.nput<<"]";
-        shared.nput++;
-        shared.nval++;
+        buff[put.nput] = put.nval;
+        qDebug()<<"thread id: "<<QThread::currentThreadId()<<" produce items["<<put.nput<<"]";
+        put.nput++;
+        put.nval++;
         _itemCount++;
-        shared.mutex.unlock();
+        put.mutex.unlock();
+
+        bool doSignal = false;
+        nready.mutex.lock();
+        doSignal = (nready.nready == 0);
+        nready.nready++;
+        nready.mutex.unlock();
+        if (doSignal) {
+            nready.cond.wakeAll();
+        }
     }
 }
 
@@ -25,8 +34,13 @@ void Consumer::doWork()
 {
     bool error = false;
     for (int i = 0; i < ITEMS; i++) {
-        waitForItem(i);
-        if (shared.buff[i] != i) {
+        nready.mutex.lock();
+        while (nready.nready == 0) {
+            nready.cond.wait(&nready.mutex);
+        }
+        nready.nready--;
+        nready.mutex.unlock();
+        if (buff[i] != i) {
             error = true;
         } else {
             qDebug()<<QString("consume item[%1]").arg(i);
@@ -36,18 +50,6 @@ void Consumer::doWork()
         qDebug()<<"Error occur in consume";
     }  else {
         qDebug()<<"Success!";
-    }
-}
-
-void Consumer::waitForItem(int index)
-{
-    for (;;) {
-        shared.mutex.lock();
-        if (index < shared.nput) {
-            shared.mutex.unlock();
-            return;
-        }
-        shared.mutex.unlock();
     }
 }
 
