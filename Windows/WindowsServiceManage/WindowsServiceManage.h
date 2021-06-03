@@ -6,6 +6,7 @@ class WindowsServiceManage
 {
 public:
     static VOID __stdcall startService(const QString &serviceName);
+    static bool __stdcall isExist(const QString &serviceName);
 };
 
 #endif // WINDOWSSERVICEMANAGE_H

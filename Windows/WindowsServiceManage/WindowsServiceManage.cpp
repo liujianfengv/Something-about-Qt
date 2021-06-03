@@ -214,3 +214,37 @@ VOID __stdcall WindowsServiceManage::startService(const QString &serviceName)
     CloseServiceHandle(schService);
     CloseServiceHandle(schSCManager);
 }
+
+bool WindowsServiceManage::isExist(const QString &serviceName)
+{
+    schSCManager = OpenSCManager(
+                NULL,                    // local computer
+                NULL,                    // servicesActive database
+                GENERIC_READ);
+
+    if (NULL == schSCManager) {
+        qDebug()<<"OpenSCManager failed " << GetLastError();
+        return false;
+    }
+
+    // Get a handle to the service.
+    schService = OpenService(
+                schSCManager,         // SCM database
+                (const wchar_t*)serviceName.utf16(),            // name of service
+                GENERIC_READ);
+
+    if (schService == NULL) {
+        qDebug()<<"OpenService failed " << GetLastError();
+        CloseServiceHandle(schSCManager);
+        return false;
+    } else {
+        if (schService != NULL) {
+           CloseServiceHandle(schService);
+        }
+
+        if (schSCManager != NULL) {
+           CloseServiceHandle(schSCManager);
+        }
+
+    }
+}
