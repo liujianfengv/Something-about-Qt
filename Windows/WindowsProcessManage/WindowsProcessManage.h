@@ -11,5 +11,10 @@ public:
     /// \return The process name set
     ///
     static QSet<QString> GetProcessList();
+    ///
+    /// \brief Is64BitWindows check if current os is 64bit windows
+    /// \return
+    ///
+    static BOOL Is64BitWindows();
 };
 #endif

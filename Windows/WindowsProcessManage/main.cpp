@@ -7,5 +7,6 @@ int main()
     for (const auto &name : result) {
         qDebug()<<name;
     }
+    qDebug()<<"is64bitWindows: "<<WindowsProcessManage::Is64BitWindows();
     return 0;
 }
