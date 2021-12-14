@@ -15,6 +15,7 @@
 - [UI](https://github.com/liujianfengv/Something-about-Qt/tree/main/UI)
     - [ClickableWidget](https://github.com/liujianfengv/Something-about-Qt/tree/main/UI/ClickableWidget)
     - [LoadingBar](https://github.com/liujianfengv/Something-about-Qt/tree/main/UI/LoadingBar)
+    - [SignalProgressBar](https://github.com/liujianfengv/Something-about-Qt/tree/main/UI)
 - [Windows](https://github.com/liujianfengv/Something-about-Qt/tree/main/Windows)
     - [BorderlessWindow](https://github.com/liujianfengv/Something-about-Qt/tree/main/Windows/BorderlessWindow)
     - [CustomWindowsTitle](https://github.com/liujianfengv/Something-about-Qt/tree/main/Windows/CustomWindowsTitle)
