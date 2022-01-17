@@ -5,19 +5,18 @@
 #include <QDebug>
 
 ImageLoader::ImageLoader(QObject *parent):
-    QObject(parent),
-    m_cachePath(QDir::currentPath())
+    QObject(parent)
 {
+    SetCachePath(QDir::currentPath());
     m_manager = new QNetworkAccessManager(this);
     connect(m_manager, &QNetworkAccessManager::finished,
             this, &ImageLoader::OnRequestFinished);
 }
 
 ImageLoader::ImageLoader(const QString &cachePath, QObject *parent):
-    QObject(parent),
-    m_cachePath(cachePath)
+    ImageLoader(parent)
 {
-
+    SetCachePath(cachePath);
 }
 
 void ImageLoader::LoadImage(const QUrl &url)
@@ -35,6 +34,10 @@ const QString &ImageLoader::GetCachePath() const
 void ImageLoader::SetCachePath(const QString &CachePath)
 {
     m_cachePath = CachePath;
+    QDir dir;
+    if (!dir.exists(m_cachePath)) {
+        dir.mkpath(m_cachePath);
+    }
 }
 
 void ImageLoader::OnRequestFinished(QNetworkReply *reply)
