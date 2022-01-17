@@ -12,6 +12,8 @@
     - [MyString](https://github.com/liujianfengv/Something-about-Qt/tree/main/Reimplement/MyString)
 - [Thread](https://github.com/liujianfengv/Something-about-Qt/tree/main/Thread)
     - [ProducerAndCustomer](https://github.com/liujianfengv/Something-about-Qt/tree/main/Thread/ProducerAndCustomer)
+- [Tools](https://github.com/liujianfengv/Something-about-Qt/tree/main/Tools)
+    - [ImageLoader](https://github.com/liujianfengv/Something-about-Qt/tree/main/Tools/ImageLoader)
 - [UI](https://github.com/liujianfengv/Something-about-Qt/tree/main/UI)
     - [ClickableWidget](https://github.com/liujianfengv/Something-about-Qt/tree/main/UI/ClickableWidget)
     - [LoadingBar](https://github.com/liujianfengv/Something-about-Qt/tree/main/UI/LoadingBar)
