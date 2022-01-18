@@ -49,6 +49,7 @@ void ImageLoader::OnRequestFinished(QNetworkReply *reply)
         if (file.open(QIODevice::WriteOnly)) {
             file.write(reply->readAll());
             emit ImageLoaded(url, filePath);
+            file.close();
         }
     }
     reply->deleteLater();
